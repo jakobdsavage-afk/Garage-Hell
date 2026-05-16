@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { paintedMetalMaterial, gunmetalMaterial } from "./textures.js";
 
 export class Pickup {
   constructor(scene, type, x, z, options = {}) {
@@ -16,68 +17,43 @@ export class Pickup {
   buildMesh() {
     const group = new THREE.Group();
 
-    // Floating platform base
-    const baseMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1a22,
-      roughness: 0.4,
-      metalness: 0.3,
-      emissive: 0x080810,
-      emissiveIntensity: 0.3
-    });
+    // Floating platform base — dark metallic disc
+    const baseMat = gunmetalMaterial({ baseColor: "#14161c", roughness: 0.4, metalness: 0.45 });
     const base = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.36, 0.1, 8), baseMat);
     group.add(base);
 
     if (this.type === "health") {
-      // Medkit — red cross on white box
-      const boxMat = new THREE.MeshStandardMaterial({
-        color: 0xeeeeee,
-        roughness: 0.4,
-        metalness: 0.1,
-        emissive: 0xff2020,
-        emissiveIntensity: 0.3
-      });
+      // Medkit — white metal box with red cross
+      const boxMat = paintedMetalMaterial({ hue: 0, sat: 5, light: 80, roughness: 0.45, metalness: 0.15 });
       const box = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.28, 0.32), boxMat);
       box.position.y = 0.28;
       group.add(box);
 
-      const crossMat = new THREE.MeshStandardMaterial({ color: 0xff2020, emissive: 0xff0000, emissiveIntensity: 2.0, roughness: 0.3 });
+      const crossMat = new THREE.MeshStandardMaterial({ color: 0xcc1515, emissive: 0xff0000, emissiveIntensity: 2.0, roughness: 0.3, metalness: 0.2 });
       const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.22, 0.34), crossMat);
       crossV.position.y = 0.28;
       const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.08, 0.34), crossMat);
       crossH.position.y = 0.28;
       group.add(crossV, crossH);
 
-      // Glow light
       const light = new THREE.PointLight(0xff4444, 1.0, 3);
       light.position.y = 0.4;
       group.add(light);
 
     } else if (this.type === "armor") {
-      // Armor shard — blue metallic diamond shape
-      const armorMat = new THREE.MeshStandardMaterial({
-        color: 0x4488ff,
-        roughness: 0.25,
-        metalness: 0.6,
-        emissive: 0x2244aa,
-        emissiveIntensity: 1.2
-      });
+      // Armor shard — blue metallic diamond
+      const armorMat = paintedMetalMaterial({ hue: 215, sat: 65, light: 40, roughness: 0.2, metalness: 0.55, emissive: 0x1144aa, emissiveIntensity: 1.2 });
       const diamond = new THREE.Mesh(new THREE.OctahedronGeometry(0.22, 0), armorMat);
       diamond.position.y = 0.35;
       diamond.scale.set(1.0, 1.4, 1.0);
       group.add(diamond);
 
-      // Shield outline ring
       const ringMat = new THREE.MeshStandardMaterial({
-        color: 0x66aaff,
-        emissive: 0x3388ff,
-        emissiveIntensity: 1.5,
-        roughness: 0.3,
-        transparent: true,
-        opacity: 0.7
+        color: 0x66aaff, emissive: 0x3388ff, emissiveIntensity: 1.5,
+        roughness: 0.3, metalness: 0.5, transparent: true, opacity: 0.7
       });
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.025, 8, 16), ringMat);
-      ring.position.y = 0.35;
-      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.35; ring.rotation.x = Math.PI / 2;
       group.add(ring);
 
       const light = new THREE.PointLight(0x4488ff, 0.8, 3);
@@ -85,59 +61,43 @@ export class Pickup {
       group.add(light);
 
     } else if (this.type === "ammo") {
-      // Shell box — chunky orange/brass box
-      const shellMat = new THREE.MeshStandardMaterial({
-        color: 0xcc8822,
-        roughness: 0.4,
-        metalness: 0.35,
-        emissive: 0x884400,
-        emissiveIntensity: 0.6
-      });
+      // Shell box — dark brass/olive metal box with shell tips
+      const shellMat = paintedMetalMaterial({ hue: 35, sat: 50, light: 25, roughness: 0.45, metalness: 0.4, emissive: 0x442200, emissiveIntensity: 0.4 });
       const shellBox = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.24, 0.32), shellMat);
       shellBox.position.y = 0.24;
       group.add(shellBox);
 
-      // Shell tips visible on top
-      const tipMat = new THREE.MeshStandardMaterial({ color: 0xffcc44, emissive: 0xffaa00, emissiveIntensity: 1.0, roughness: 0.3, metalness: 0.5 });
+      const tipMat = new THREE.MeshStandardMaterial({ color: 0xccaa44, emissive: 0xaa8800, emissiveIntensity: 0.8, roughness: 0.3, metalness: 0.55 });
       for (let i = -1; i <= 1; i++) {
         const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.12, 6), tipMat);
         tip.position.set(i * 0.12, 0.4, 0);
         group.add(tip);
       }
 
-      const light = new THREE.PointLight(0xffaa33, 0.7, 2.5);
+      const light = new THREE.PointLight(0xffaa33, 0.5, 2.5);
       light.position.y = 0.4;
       group.add(light);
 
     } else if (this.type === "key") {
-      // Key — distinct colored key shape
       const keyColor = this.key === "red" ? 0xff2020 : this.key === "blue" ? 0x2288ff : 0xffcc00;
       const keyEmissive = this.key === "red" ? 0xff0000 : this.key === "blue" ? 0x0055ff : 0xffaa00;
       const keyMat = new THREE.MeshStandardMaterial({
-        color: keyColor,
-        roughness: 0.25,
-        metalness: 0.6,
-        emissive: keyEmissive,
-        emissiveIntensity: 2.5
+        color: keyColor, roughness: 0.2, metalness: 0.6,
+        emissive: keyEmissive, emissiveIntensity: 2.5
       });
 
-      // Key ring (torus)
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.04, 8, 16), keyMat);
-      ring.position.y = 0.42;
-      ring.rotation.x = Math.PI / 6;
+      ring.position.y = 0.42; ring.rotation.x = Math.PI / 6;
       group.add(ring);
 
-      // Key shaft
       const shaft = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.28, 0.04), keyMat);
       shaft.position.set(0, 0.2, 0);
       group.add(shaft);
 
-      // Key teeth
       const teeth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.06, 0.04), keyMat);
       teeth.position.set(0.04, 0.1, 0);
       group.add(teeth);
 
-      // Strong glow
       const light = new THREE.PointLight(keyColor, 2.0, 4.5);
       light.position.y = 0.4;
       group.add(light);
