@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Garage Hell</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">After-hours prototype</p>
+          <h1>Garage Hell</h1>
+        </div>
+        <div class="hint">Click the viewport to capture mouse • Esc releases</div>
+      </header>
+
+      <main class="shell">
+        <aside class="side-panel left-stack">
+          <section class="glass-panel meter-panel">
+            <div class="panel-heading">
+              <span>Health</span>
+              <strong><span id="healthValue">100</span>/<span id="maxHealthValue">100</span></strong>
+            </div>
+            <div class="meter"><div id="healthBar" class="meter-fill health-fill"></div></div>
+          </section>
+
+          <section class="glass-panel meter-panel">
+            <div class="panel-heading">
+              <span>Armor</span>
+              <strong><span id="armorValue">25</span>/<span id="maxArmorValue">100</span></strong>
+            </div>
+            <div class="meter"><div id="armorBar" class="meter-fill armor-fill"></div></div>
+          </section>
+
+          <section class="glass-panel ammo-panel">
+            <div class="panel-heading">
+              <span>Impact Shotgun</span>
+              <strong id="ammoValue">8 / 24</strong>
+            </div>
+            <p>Shells</p>
+          </section>
+
+          <section class="glass-panel keys-panel">
+            <div class="panel-heading"><span>Keys</span></div>
+            <div class="key-row">
+              <div id="redKey" class="key-chip red">RED</div>
+              <div id="blueKey" class="key-chip blue">BLUE</div>
+              <div id="yellowKey" class="key-chip yellow">YELLOW</div>
+            </div>
+          </section>
+        </aside>
+
+        <section id="gameViewport" class="game-viewport" aria-label="Garage Hell gameplay viewport">
+          <div class="viewport-frame"></div>
+          <div id="crosshair" class="crosshair"></div>
+          <div id="damageVignette" class="damage-vignette"></div>
+          <div id="muzzleFlash" class="muzzle-flash"></div>
+          <div id="weaponHud" class="weapon-hud">
+            <div class="weapon-barrel"></div>
+            <div class="weapon-body"></div>
+            <div class="weapon-grip"></div>
+          </div>
+          <div id="overlay" class="overlay visible">
+            <div class="overlay-card">
+              <p class="eyebrow">Cursed auto repair survival</p>
+              <h2 id="overlayTitle">Garage Hell</h2>
+              <p id="overlayText">Clear every Oil Imp, grab the keys, and survive the closing shift.</p>
+              <button id="startButton" type="button">Start Game</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-panel right-stack">
+          <section class="glass-panel items-panel">
+            <div class="panel-heading"><span>Items</span></div>
+            <div class="item-grid">
+              <div class="item-slot"><b id="healthPickupCount">0</b><span>Medkits</span></div>
+              <div class="item-slot"><b id="armorPickupCount">0</b><span>Armor</span></div>
+              <div class="item-slot"><b id="ammoPickupCount">0</b><span>Shells</span></div>
+              <div class="item-slot"><b id="skullCount">0</b><span>Skulls</span></div>
+            </div>
+          </section>
+
+          <section class="glass-panel objective-panel">
+            <div class="panel-heading"><span>Objective</span></div>
+            <p id="objectiveText">Clear all Oil Imps</p>
+            <div class="enemy-count"><span id="enemiesKilled">0</span> / <span id="enemyTotal">10</span></div>
+          </section>
+
+          <section class="glass-panel status-panel">
+            <div class="panel-heading"><span>Status</span></div>
+            <strong id="statusText">READY</strong>
+            <p id="messageText">The service bays are quiet. Too quiet.</p>
+          </section>
+
+          <section class="glass-panel controls-panel">
+            <div class="panel-heading"><span>Controls</span></div>
+            <p>WASD move • Mouse look • Left click fire • Shift sprint • Space jump • R reload • E open</p>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
