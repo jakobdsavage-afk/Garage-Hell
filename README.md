@@ -13,6 +13,14 @@ Godot 4 was the preferred target, but this workspace did not have Godot availabl
 
 ## Run Locally
 
+### Easiest on Mac
+
+Double-click `play.command`.
+
+It installs dependencies if needed, opens the game in your browser, and starts the local server. Keep the terminal window open while playing.
+
+### Manual
+
 ```bash
 npm install
 npm run dev
