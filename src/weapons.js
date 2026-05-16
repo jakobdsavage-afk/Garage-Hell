@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import { flashMesh } from "./utils.js";
 
+/* ═══════════════════════════════════════════════════
+   Impact Shotgun — detailed pump-action viewmodel
+   held at lower-right, dark gunmetal finish
+   ═══════════════════════════════════════════════════ */
 export class ImpactShotgun {
   constructor(camera, ui, audio) {
     this.camera = camera;
@@ -25,84 +29,134 @@ export class ImpactShotgun {
   buildModel() {
     this.model = new THREE.Group();
 
-    // Materials
+    // ── Materials ──
     const gunMetal = new THREE.MeshStandardMaterial({
-      color: 0x2a2e33,
-      roughness: 0.38,
-      metalness: 0.55,
-      emissive: 0x080a0e,
-      emissiveIntensity: 0.15
+      color: 0x22262c,
+      roughness: 0.32,
+      metalness: 0.6,
+      emissive: 0x060810,
+      emissiveIntensity: 0.1
     });
     const darkSteel = new THREE.MeshStandardMaterial({
-      color: 0x1a1e22,
-      roughness: 0.45,
-      metalness: 0.6,
+      color: 0x161a20,
+      roughness: 0.38,
+      metalness: 0.65,
+      emissive: 0x030508,
+      emissiveIntensity: 0.08
+    });
+    const blued = new THREE.MeshStandardMaterial({
+      color: 0x1a1e28,
+      roughness: 0.28,
+      metalness: 0.7,
       emissive: 0x040608,
-      emissiveIntensity: 0.1
+      emissiveIntensity: 0.08
     });
     const wood = new THREE.MeshStandardMaterial({
-      color: 0x3d2814,
-      roughness: 0.82,
+      color: 0x3a2210,
+      roughness: 0.78,
       metalness: 0.0,
-      emissive: 0x0a0500,
-      emissiveIntensity: 0.1
+      emissive: 0x080400,
+      emissiveIntensity: 0.08
     });
     const chrome = new THREE.MeshStandardMaterial({
-      color: 0x888888,
-      roughness: 0.2,
-      metalness: 0.85,
+      color: 0x999999,
+      roughness: 0.15,
+      metalness: 0.9,
       emissive: 0x222222,
-      emissiveIntensity: 0.1
+      emissiveIntensity: 0.08
     });
     const muzzleMat = new THREE.MeshStandardMaterial({
-      color: 0x111111,
-      roughness: 0.3,
-      metalness: 0.7
+      color: 0x0e0e0e,
+      roughness: 0.25,
+      metalness: 0.75
     });
 
-    // Double barrel tubes
-    const barrel1 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.92, 8), darkSteel);
-    barrel1.rotation.x = Math.PI / 2;
-    barrel1.position.set(0.08, -0.12, -0.7);
-    const barrel2 = barrel1.clone();
-    barrel2.position.x = -0.08;
+    // ── Barrel — long tube ──
+    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 1.1, 10), blued);
+    barrel.rotation.x = Math.PI / 2;
+    barrel.position.set(0, -0.1, -0.78);
 
-    // Barrel shroud / heat shield
-    const shroud = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.16, 0.75), gunMetal);
-    shroud.position.set(0, -0.14, -0.58);
+    // ── Magazine tube (under barrel) ──
+    const magTube = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.85, 8), darkSteel);
+    magTube.rotation.x = Math.PI / 2;
+    magTube.position.set(0, -0.16, -0.68);
 
-    // Muzzle ring
-    const muzzle = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.025, 6, 12), muzzleMat);
-    muzzle.position.set(0, -0.12, -1.15);
+    // ── Barrel shroud / heat shield ──
+    const shroud = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.18, 0.7), gunMetal);
+    shroud.position.set(0, -0.13, -0.6);
 
-    // Receiver body
-    const receiver = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.38), gunMetal);
-    receiver.position.set(0, -0.2, -0.22);
+    // ── Muzzle ──
+    const muzzle = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.06, 0.06, 10), muzzleMat);
+    muzzle.rotation.x = Math.PI / 2;
+    muzzle.position.set(0, -0.1, -1.34);
 
-    // Pump slide
-    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.1, 0.22), chrome);
-    pump.position.set(0, -0.28, -0.48);
+    // ── Muzzle ring ──
+    const muzzleRing = new THREE.Mesh(new THREE.TorusGeometry(0.065, 0.012, 6, 12), chrome);
+    muzzleRing.position.set(0, -0.1, -1.35);
 
-    // Trigger guard
-    const guard = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.015, 6, 8), darkSteel);
-    guard.position.set(0, -0.32, -0.12);
+    // ── Front sight ──
+    const frontSight = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.04, 0.02), chrome);
+    frontSight.position.set(0, -0.06, -1.2);
+
+    // ── Receiver body ──
+    const receiver = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.4), gunMetal);
+    receiver.position.set(0, -0.18, -0.2);
+
+    // ── Receiver top (flat rail) ──
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.025, 0.35), darkSteel);
+    rail.position.set(0, -0.07, -0.2);
+
+    // ── Ejection port ──
+    const port = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.05, 0.1),
+      new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.9, metalness: 0.1 }));
+    port.position.set(0.1, -0.14, -0.18);
+
+    // ── Pump / forend ──
+    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.12, 0.24), chrome);
+    pump.position.set(0, -0.22, -0.52);
+    // Pump grip ridges
+    const ridgeMat = new THREE.MeshStandardMaterial({ color: 0x777777, roughness: 0.3, metalness: 0.7 });
+    for (let i = -2; i <= 2; i++) {
+      const ridge = new THREE.Mesh(new THREE.BoxGeometry(0.145, 0.015, 0.015), ridgeMat);
+      ridge.position.set(0, -0.22, -0.46 + i * 0.04);
+      this.model.add(ridge);
+    }
+
+    // ── Trigger guard ──
+    const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 6, 8), darkSteel);
+    guard.position.set(0, -0.3, -0.1);
     guard.rotation.y = Math.PI / 2;
 
-    // Stock / grip — wood
-    const grip = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.38, 0.16), wood);
-    grip.position.set(0, -0.48, -0.02);
-    grip.rotation.x = -0.2;
+    // ── Trigger ──
+    const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.04, 0.02), chrome);
+    trigger.position.set(0, -0.28, -0.1);
 
-    // Stock butt
-    const stock = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.22), wood);
-    stock.position.set(0, -0.62, 0.08);
+    // ── Pistol grip ──
+    const grip = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.32, 0.12), wood);
+    grip.position.set(0, -0.44, -0.02);
+    grip.rotation.x = -0.18;
 
-    // Shell ejection port detail
-    const port = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.1), new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.9 }));
-    port.position.set(0.16, -0.16, -0.2);
+    // ── Stock ──
+    const stock = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.14, 0.28), wood);
+    stock.position.set(0, -0.52, 0.14);
+    stock.rotation.x = -0.05;
 
-    this.model.add(barrel1, barrel2, shroud, muzzle, receiver, pump, guard, grip, stock, port);
-    this.model.position.set(0.44, -0.38, -0.72);
+    // ── Stock butt plate ──
+    const buttPlate = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.15, 0.025), darkSteel);
+    buttPlate.position.set(0, -0.52, 0.29);
+
+    // ── Sling mount ──
+    const slingMount = new THREE.Mesh(new THREE.TorusGeometry(0.02, 0.006, 4, 6), chrome);
+    slingMount.position.set(0, -0.08, -1.05);
+
+    this.model.add(
+      barrel, magTube, shroud, muzzle, muzzleRing, frontSight,
+      receiver, rail, port, pump, guard, trigger,
+      grip, stock, buttPlate, slingMount
+    );
+
+    // Position: lower-right of screen, angled slightly
+    this.model.position.set(0.48, -0.42, -0.72);
     this.model.rotation.y = -0.02;
     this.camera.add(this.model);
   }
@@ -118,20 +172,20 @@ export class ImpactShotgun {
     this.cooldown = Math.max(0, this.cooldown - dt);
     if (this.reloadTimer > 0) {
       this.reloadTimer -= dt;
-      // Pump-action reload wobble
-      this.model.rotation.x = Math.sin(this.reloadTimer * 18) * 0.06;
-      this.model.position.y = -0.38 + Math.sin(this.reloadTimer * 12) * 0.02;
+      // Pump-action reload animation
+      this.model.rotation.x = Math.sin(this.reloadTimer * 18) * 0.07;
+      this.model.position.y = -0.42 + Math.sin(this.reloadTimer * 12) * 0.025;
       if (this.reloadTimer <= 0) {
         const needed = this.magSize - this.loaded;
         const moved = Math.min(needed, this.reserve);
         this.loaded += moved;
         this.reserve -= moved;
-        this.model.position.y = -0.38;
+        this.model.position.y = -0.42;
         this.ui.showMessage("Impact Shotgun loaded.", "RELOADED");
       }
     } else {
       this.model.rotation.x = THREE.MathUtils.lerp(this.model.rotation.x, 0, 0.2);
-      this.model.position.y = THREE.MathUtils.lerp(this.model.position.y, -0.38, 0.15);
+      this.model.position.y = THREE.MathUtils.lerp(this.model.position.y, -0.42, 0.15);
     }
   }
 
@@ -158,9 +212,9 @@ export class ImpactShotgun {
     this.cooldown = this.fireDelay;
     this.audio.shoot();
     this.ui.showMuzzle();
-    // Recoil kick
-    this.model.rotation.x = -0.15;
-    this.model.position.z = -0.72 + 0.06;
+    // Recoil kick — back and up
+    this.model.rotation.x = -0.18;
+    this.model.position.z = -0.72 + 0.08;
 
     let bestHit = null;
     for (let pellet = 0; pellet < 6; pellet++) {

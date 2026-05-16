@@ -13,15 +13,15 @@ class GarageHellGame {
     this.ui = new UI();
     this.audio = new AudioBus();
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x0a0808);
-    this.scene.fog = new THREE.FogExp2(0x0f0a08, 0.022);
+    this.scene.background = new THREE.Color(0x060508);
+    this.scene.fog = new THREE.FogExp2(0x080608, 0.032);
     this.camera = new THREE.PerspectiveCamera(74, 1, 0.05, 80);
-    this.renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.1;
+    this.renderer.toneMappingExposure = 0.85;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.viewport.prepend(this.renderer.domElement);
 
@@ -44,22 +44,21 @@ class GarageHellGame {
       y: 0
     };
     this.bindEvents();
-    this.updateControlHints();
     this.resize();
     this.ui.update(this.state);
     requestAnimationFrame(() => this.loop());
   }
 
   addPlayerHeadlamp() {
-    // Tighter, warmer headlamp for atmosphere
-    const lamp = new THREE.SpotLight(0xffd8a8, 4.2, 20, Math.PI / 8, 0.5, 1.2);
+    // Tight warm headlamp — like a work light
+    const lamp = new THREE.SpotLight(0xffd8a8, 3.5, 18, Math.PI / 9, 0.55, 1.3);
     lamp.position.set(0, 0.1, 0);
-    lamp.target.position.set(0, -0.2, -1);
+    lamp.target.position.set(0, -0.3, -1);
     this.camera.add(lamp);
     this.camera.add(lamp.target);
 
-    // Subtle ambient fill attached to camera so player is never in total darkness
-    const fill = new THREE.PointLight(0xffeedd, 0.6, 6);
+    // Very subtle fill so player isn't in total darkness
+    const fill = new THREE.PointLight(0xeeddcc, 0.35, 4);
     fill.position.set(0, 0, -0.5);
     this.camera.add(fill);
   }
@@ -102,10 +101,6 @@ class GarageHellGame {
         this.startOrRestart();
       }
     });
-  }
-
-  updateControlHints() {
-    // Controls info is now part of the overlay card; no separate panel needed
   }
 
   get state() {
