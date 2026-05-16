@@ -19,33 +19,113 @@ export class OilImp {
 
   buildMesh() {
     const group = new THREE.Group();
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x5a3a23, roughness: 0.68, emissive: 0x2a0f05, emissiveIntensity: 0.58 });
-    const headMat = new THREE.MeshStandardMaterial({ color: 0x6a472b, roughness: 0.64, emissive: 0x2d1006, emissiveIntensity: 0.48 });
-    const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff7040, emissive: 0xff3600, emissiveIntensity: 5.2 });
-    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 0.58, 4, 8), bodyMat);
-    body.position.y = 0.82;
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.34, 10, 8), headMat);
-    head.position.y = 1.48;
-    const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.085, 10, 8), eyeMat);
-    leftEye.position.set(-0.13, 1.53, -0.29);
+
+    // Dark oily body — high contrast against lit environment
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x1a1008,
+      roughness: 0.35,
+      metalness: 0.15,
+      emissive: 0x0a0400,
+      emissiveIntensity: 0.3
+    });
+
+    // Slightly lighter head for silhouette read
+    const headMat = new THREE.MeshStandardMaterial({
+      color: 0x2a1a0c,
+      roughness: 0.4,
+      metalness: 0.1,
+      emissive: 0x120800,
+      emissiveIntensity: 0.3
+    });
+
+    // Bright threat eyes — key readability element
+    const eyeMat = new THREE.MeshStandardMaterial({
+      color: 0xff6020,
+      emissive: 0xff4400,
+      emissiveIntensity: 6.0,
+      roughness: 0.2
+    });
+
+    // Body — hunched capsule shape
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.38, 0.7, 5, 10), bodyMat);
+    body.position.y = 0.78;
+    body.rotation.x = 0.15; // Hunched forward
+
+    // Head — slightly flattened for menacing look
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), headMat);
+    head.position.y = 1.52;
+    head.scale.set(1.1, 0.85, 1.0);
+
+    // Eyes — larger, brighter, wider apart for threat read at distance
+    const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), eyeMat);
+    leftEye.position.set(-0.16, 1.55, -0.24);
     const rightEye = leftEye.clone();
-    rightEye.position.x = 0.12;
-    const core = new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 8), eyeMat);
-    core.position.set(0, 1.04, -0.37);
-    const hornMat = new THREE.MeshStandardMaterial({ color: 0x65431f, roughness: 0.62 });
-    const horn = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.28, 6), hornMat);
-    horn.position.set(-0.18, 1.78, 0);
-    horn.rotation.z = 0.35;
+    rightEye.position.x = 0.16;
+
+    // Core chest glow — visible from all angles
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0xff4400,
+      emissive: 0xff2200,
+      emissiveIntensity: 4.0,
+      roughness: 0.2
+    });
+    const core = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), coreMat);
+    core.position.set(0, 0.95, -0.35);
+
+    // Horns — sharper, more defined
+    const hornMat = new THREE.MeshStandardMaterial({
+      color: 0x3a2810,
+      roughness: 0.5,
+      metalness: 0.2,
+      emissive: 0x1a0800,
+      emissiveIntensity: 0.3
+    });
+    const horn = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.35, 6), hornMat);
+    horn.position.set(-0.2, 1.82, -0.05);
+    horn.rotation.z = 0.3;
+    horn.rotation.x = -0.15;
     const horn2 = horn.clone();
-    horn2.position.x = 0.18;
-    horn2.rotation.z = -0.35;
-    const stainMat = new THREE.MeshBasicMaterial({ color: 0xff4b16, transparent: true, opacity: 0.28, depthWrite: false });
-    const glow = new THREE.Mesh(new THREE.RingGeometry(0.48, 0.76, 20), stainMat);
+    horn2.position.x = 0.2;
+    horn2.rotation.z = -0.3;
+
+    // Arms — simple cylinders for silhouette width
+    const armMat = new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 0.4, metalness: 0.1 });
+    const leftArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.5, 4, 6), armMat);
+    leftArm.position.set(-0.42, 0.85, -0.1);
+    leftArm.rotation.z = 0.4;
+    leftArm.rotation.x = -0.3;
+    const rightArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.5, 4, 6), armMat);
+    rightArm.position.set(0.42, 0.85, -0.1);
+    rightArm.rotation.z = -0.4;
+    rightArm.rotation.x = -0.3;
+
+    // Oil drip puddle beneath — dark with subtle red edge glow
+    const puddleMat = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.5,
+      depthWrite: false
+    });
+    const puddle = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), puddleMat);
+    puddle.rotation.x = -Math.PI / 2;
+    puddle.position.y = 0.02;
+
+    // Threat glow ring
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: 0xff3300,
+      transparent: true,
+      opacity: 0.22,
+      depthWrite: false
+    });
+    const glow = new THREE.Mesh(new THREE.RingGeometry(0.4, 0.7, 20), glowMat);
     glow.rotation.x = -Math.PI / 2;
-    glow.position.y = 0.035;
-    const threatLight = new THREE.PointLight(0xff3b12, 0.85, 3.8);
-    threatLight.position.set(0, 1.1, -0.15);
-    group.add(body, head, leftEye, rightEye, core, horn, horn2, glow, threatLight);
+    glow.position.y = 0.03;
+
+    // Threat point light — makes enemy visible in dark areas
+    const threatLight = new THREE.PointLight(0xff3300, 1.2, 4.5);
+    threatLight.position.set(0, 1.0, -0.2);
+
+    group.add(body, head, leftEye, rightEye, core, horn, horn2, leftArm, rightArm, puddle, glow, threatLight);
     group.position.copy(this.position);
     this.mesh = group;
     this.scene.add(group);
@@ -86,7 +166,8 @@ export class OilImp {
     }
     this.mesh.position.set(this.position.x, 0, this.position.z);
     this.mesh.lookAt(player.position.x, 0.8, player.position.z);
-    this.mesh.position.y = Math.abs(Math.sin(performance.now() * 0.006 + this.position.x)) * 0.07;
+    // Aggressive bobbing animation
+    this.mesh.position.y = Math.abs(Math.sin(performance.now() * 0.007 + this.position.x * 2)) * 0.09;
   }
 
   takeDamage(amount) {

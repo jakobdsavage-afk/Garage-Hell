@@ -13,14 +13,15 @@ class GarageHellGame {
     this.ui = new UI();
     this.audio = new AudioBus();
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x121016);
-    this.scene.fog = new THREE.FogExp2(0x21100b, 0.018);
+    this.scene.background = new THREE.Color(0x0a0808);
+    this.scene.fog = new THREE.FogExp2(0x0f0a08, 0.022);
     this.camera = new THREE.PerspectiveCamera(74, 1, 0.05, 80);
     this.renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.28;
+    this.renderer.toneMappingExposure = 1.1;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.viewport.prepend(this.renderer.domElement);
 
@@ -50,11 +51,17 @@ class GarageHellGame {
   }
 
   addPlayerHeadlamp() {
-    const lamp = new THREE.SpotLight(0xffd3a0, 3.6, 18, Math.PI / 7, 0.42, 1.15);
-    lamp.position.set(0, 0.12, 0);
-    lamp.target.position.set(0, -0.18, -1);
+    // Tighter, warmer headlamp for atmosphere
+    const lamp = new THREE.SpotLight(0xffd8a8, 4.2, 20, Math.PI / 8, 0.5, 1.2);
+    lamp.position.set(0, 0.1, 0);
+    lamp.target.position.set(0, -0.2, -1);
     this.camera.add(lamp);
     this.camera.add(lamp.target);
+
+    // Subtle ambient fill attached to camera so player is never in total darkness
+    const fill = new THREE.PointLight(0xffeedd, 0.6, 6);
+    fill.position.set(0, 0, -0.5);
+    this.camera.add(fill);
   }
 
   bindEvents() {
@@ -99,9 +106,9 @@ class GarageHellGame {
 
   updateControlHints() {
     const hint = document.querySelector(".hint");
-    if (hint) hint.textContent = "Click to shoot • Drag inside viewport to look";
+    if (hint) hint.textContent = "Click to shoot \u2022 Drag inside viewport to look";
     const controls = document.querySelector(".controls-panel p");
-    if (controls) controls.textContent = "WASD move • Drag look • Click fire • Shift sprint • Space jump • R reload • E open";
+    if (controls) controls.textContent = "WASD move \u2022 Drag look \u2022 Click fire \u2022 Shift sprint \u2022 Space jump \u2022 R reload \u2022 E open";
   }
 
   get state() {

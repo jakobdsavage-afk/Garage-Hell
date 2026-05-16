@@ -1,15 +1,18 @@
 :root {
   color-scheme: dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --glass: rgba(245, 248, 255, 0.1);
-  --glass-strong: rgba(255, 255, 255, 0.16);
-  --line: rgba(255, 255, 255, 0.18);
-  --text: #f5f7fb;
-  --muted: rgba(238, 242, 250, 0.68);
-  --red: #ff4949;
-  --orange: #ff9b38;
-  --blue: #6fc6ff;
-  --yellow: #ffe66d;
+  --glass: rgba(12, 14, 20, 0.55);
+  --glass-strong: rgba(20, 22, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --line: rgba(255, 140, 50, 0.12);
+  --text: #f0ece6;
+  --muted: rgba(220, 210, 195, 0.65);
+  --red: #ff4040;
+  --orange: #ff8833;
+  --blue: #55aaff;
+  --yellow: #ffcc33;
+  --green: #44cc66;
 }
 
 * {
@@ -22,243 +25,285 @@ body {
   min-height: 100%;
   overflow: hidden;
   background:
-    radial-gradient(circle at 22% 8%, rgba(255, 86, 44, 0.24), transparent 30%),
-    radial-gradient(circle at 80% 90%, rgba(55, 136, 255, 0.16), transparent 28%),
-    linear-gradient(135deg, #07080d, #12141d 48%, #08070a);
+    radial-gradient(ellipse at 15% 10%, rgba(255, 60, 20, 0.12), transparent 35%),
+    radial-gradient(ellipse at 85% 85%, rgba(40, 100, 200, 0.08), transparent 30%),
+    linear-gradient(160deg, #060608, #0e0c10 40%, #080608);
   color: var(--text);
 }
 
 button {
-  border: 0;
-  border-radius: 14px;
-  padding: 13px 20px;
-  background: linear-gradient(135deg, #ff653e, #ffb13e);
-  color: #180a05;
+  border: 1px solid rgba(255, 120, 40, 0.4);
+  border-radius: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #cc3300, #ff6600 50%, #ff9933);
+  color: #fff;
   cursor: pointer;
   font: inherit;
   font-weight: 800;
-  box-shadow: 0 12px 34px rgba(255, 94, 38, 0.32);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 8px 24px rgba(255, 60, 20, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+button:hover {
+  box-shadow:
+    0 10px 30px rgba(255, 60, 20, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 button:active {
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow: 0 4px 12px rgba(255, 60, 20, 0.2);
 }
 
 #app {
   height: 100vh;
-  padding: 18px;
+  padding: 14px 16px;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 14px;
+  gap: 12px;
 }
 
+/* ─── TOP BAR ─── */
 .topbar {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  padding: 0 8px;
+  padding: 0 6px;
 }
 
 .eyebrow {
-  margin: 0 0 4px;
+  margin: 0 0 3px;
   color: var(--orange);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  opacity: 0.85;
 }
 
 h1,
 h2 {
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 h1 {
-  font-size: clamp(28px, 4vh, 46px);
+  font-size: clamp(24px, 3.5vh, 40px);
   line-height: 0.95;
-  text-shadow: 0 0 24px rgba(255, 92, 52, 0.35);
+  text-shadow: 0 0 20px rgba(255, 60, 20, 0.3);
+  background: linear-gradient(135deg, #fff, #ffccaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hint {
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
+/* ─── SHELL LAYOUT ─── */
 .shell {
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(190px, 250px) minmax(580px, 1fr) minmax(210px, 280px);
-  gap: 14px;
+  grid-template-columns: minmax(180px, 240px) minmax(560px, 1fr) minmax(200px, 260px);
+  gap: 12px;
   align-items: stretch;
 }
 
 .side-panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   min-height: 0;
 }
 
+/* ─── GLASS PANELS ─── */
 .glass-panel {
-  border: 1px solid var(--line);
-  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.055)),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), transparent 60%),
     var(--glass);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.26),
-    0 18px 45px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  padding: 16px;
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 12px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  padding: 14px;
 }
 
 .panel-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  color: rgba(255, 255, 255, 0.74);
-  font-size: 12px;
+  gap: 10px;
+  color: rgba(255, 200, 150, 0.7);
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .panel-heading strong {
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
+  text-shadow: 0 0 8px rgba(255, 100, 50, 0.3);
 }
 
+/* ─── METERS ─── */
 .meter {
-  height: 12px;
-  margin-top: 12px;
+  height: 10px;
+  margin-top: 10px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .meter-fill {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  transition: width 140ms ease;
+  transition: width 120ms ease;
 }
 
 .health-fill {
-  background: linear-gradient(90deg, #fb2948, #ff8a42);
-  box-shadow: 0 0 18px rgba(255, 65, 65, 0.55);
+  background: linear-gradient(90deg, #cc2020, #ff5533, #ff8844);
+  box-shadow: 0 0 12px rgba(255, 50, 30, 0.5);
 }
 
 .armor-fill {
-  background: linear-gradient(90deg, #4db8ff, #b4f1ff);
-  box-shadow: 0 0 18px rgba(77, 184, 255, 0.55);
+  background: linear-gradient(90deg, #2266cc, #44aaff, #88ccff);
+  box-shadow: 0 0 12px rgba(60, 150, 255, 0.5);
 }
 
+/* ─── AMMO / TEXT PANELS ─── */
 .ammo-panel p,
 .objective-panel p,
 .status-panel p,
 .controls-panel p {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.45;
 }
 
+/* ─── KEYS ─── */
 .key-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .key-chip {
-  height: 42px;
+  height: 38px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 13px;
-  opacity: 0.35;
-  filter: grayscale(0.65);
-  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  opacity: 0.3;
+  filter: grayscale(0.8) brightness(0.6);
+  font-size: 10px;
   font-weight: 900;
+  letter-spacing: 0.08em;
+  transition: all 200ms ease;
 }
 
 .key-chip.collected {
   opacity: 1;
   filter: none;
-  box-shadow: 0 0 18px currentColor;
+  box-shadow: 0 0 14px currentColor, inset 0 0 8px rgba(255, 255, 255, 0.1);
+  border-color: currentColor;
 }
 
 .key-chip.red {
-  color: #ff5c5c;
-  background: rgba(255, 60, 60, 0.14);
+  color: #ff4444;
+  background: rgba(255, 40, 40, 0.1);
 }
 
 .key-chip.blue {
-  color: #71cbff;
-  background: rgba(55, 151, 255, 0.14);
+  color: #55aaff;
+  background: rgba(55, 140, 255, 0.1);
 }
 
 .key-chip.yellow {
-  color: #ffe677;
-  background: rgba(255, 221, 80, 0.14);
+  color: #ffcc44;
+  background: rgba(255, 200, 50, 0.1);
 }
 
+/* ─── ITEMS GRID ─── */
 .item-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .item-slot {
-  min-height: 70px;
-  padding: 12px;
+  min-height: 60px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .item-slot b {
-  font-size: 24px;
+  font-size: 22px;
+  color: #fff;
 }
 
 .item-slot span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
+/* ─── ENEMY COUNT ─── */
 .enemy-count {
-  margin-top: 10px;
-  font-size: 38px;
+  margin-top: 8px;
+  font-size: 34px;
   font-weight: 900;
+  color: var(--orange);
+  text-shadow: 0 0 12px rgba(255, 100, 30, 0.4);
 }
 
+/* ─── STATUS ─── */
 .status-panel strong {
   display: block;
-  margin-top: 14px;
+  margin-top: 12px;
   color: #fff;
-  font-size: 23px;
-  text-shadow: 0 0 20px rgba(255, 100, 60, 0.45);
+  font-size: 20px;
+  text-shadow: 0 0 16px rgba(255, 80, 40, 0.4);
 }
 
+/* ─── GAME VIEWPORT ─── */
 .game-viewport {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 24px;
-  background: #050507;
+  border: 1px solid rgba(255, 100, 40, 0.15);
+  border-radius: 16px;
+  background: #040404;
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.52),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 40px rgba(255, 50, 20, 0.05);
   cursor: crosshair;
 }
 
@@ -272,18 +317,20 @@ h1 {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  border-radius: inherit;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 0 70px rgba(255, 70, 31, 0.08);
+    inset 0 0 0 1px rgba(255, 80, 30, 0.06),
+    inset 0 0 60px rgba(0, 0, 0, 0.4);
   z-index: 2;
 }
 
+/* ─── CROSSHAIR ─── */
 .crosshair {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 5;
@@ -293,76 +340,81 @@ h1 {
 .crosshair::after {
   content: "";
   position: absolute;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 0 8px rgba(255, 110, 58, 0.65);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 6px rgba(255, 100, 40, 0.5);
+  border-radius: 1px;
 }
 
 .crosshair::before {
-  left: 8px;
-  top: 1px;
+  left: 9px;
+  top: 2px;
   width: 2px;
   height: 16px;
 }
 
 .crosshair::after {
-  left: 1px;
-  top: 8px;
+  left: 2px;
+  top: 9px;
   width: 16px;
   height: 2px;
 }
 
+/* ─── DAMAGE VIGNETTE ─── */
 .damage-vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
   opacity: 0;
   z-index: 4;
-  background: radial-gradient(circle, transparent 45%, rgba(255, 0, 0, 0.5));
-  transition: opacity 180ms ease;
+  border-radius: inherit;
+  background: radial-gradient(circle, transparent 40%, rgba(200, 0, 0, 0.55) 100%);
+  transition: opacity 120ms ease;
 }
 
 .damage-vignette.active {
   opacity: 1;
 }
 
+/* ─── MUZZLE FLASH ─── */
 .muzzle-flash {
   position: absolute;
   left: 50%;
-  bottom: 24%;
-  width: 90px;
-  height: 90px;
+  bottom: 22%;
+  width: 100px;
+  height: 100px;
   pointer-events: none;
   opacity: 0;
   transform: translateX(-50%);
   z-index: 4;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(255, 255, 190, 0.95), rgba(255, 119, 30, 0.45) 38%, transparent 70%);
-  filter: blur(1px);
+  background: radial-gradient(circle, rgba(255, 240, 180, 0.95), rgba(255, 100, 20, 0.5) 35%, transparent 65%);
+  filter: blur(2px);
 }
 
 .muzzle-flash.active {
-  animation: flash 80ms ease;
+  animation: flash 90ms ease;
 }
 
 @keyframes flash {
-  from { opacity: 1; transform: translateX(-50%) scale(1.15); }
-  to { opacity: 0; transform: translateX(-50%) scale(0.8); }
+  from { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  to { opacity: 0; transform: translateX(-50%) scale(0.7); }
 }
 
+/* ─── WEAPON HUD (CSS overlay silhouette) ─── */
 .weapon-hud {
   position: absolute;
   left: 50%;
-  bottom: -6px;
-  width: 230px;
-  height: 145px;
+  bottom: -8px;
+  width: 240px;
+  height: 150px;
   pointer-events: none;
   transform: translateX(-50%);
   z-index: 3;
-  transition: transform 95ms ease;
+  transition: transform 80ms ease;
 }
 
 .weapon-hud.kick {
-  transform: translateX(-50%) translateY(18px) rotate(-1deg);
+  transform: translateX(-50%) translateY(14px) rotate(-0.8deg);
 }
 
 .weapon-body,
@@ -371,41 +423,56 @@ h1 {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(180deg, #3b4148, #11151a);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 16px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .weapon-barrel {
-  bottom: 58px;
-  width: 68px;
-  height: 100px;
-  border-radius: 20px 20px 8px 8px;
+  bottom: 60px;
+  width: 60px;
+  height: 105px;
+  border-radius: 16px 16px 6px 6px;
+  background: linear-gradient(180deg, #2a2e34, #181c22 60%, #0e1014);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .weapon-body {
   bottom: 18px;
-  width: 188px;
-  height: 68px;
-  border-radius: 28px 28px 10px 10px;
+  width: 180px;
+  height: 65px;
+  border-radius: 20px 20px 8px 8px;
+  background: linear-gradient(180deg, #3a3e44, #1a1e24 50%, #0c0e12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 12px 36px rgba(0, 0, 0, 0.5);
 }
 
 .weapon-grip {
-  bottom: -12px;
-  width: 76px;
-  height: 58px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #28231e, #100d0b);
+  bottom: -14px;
+  width: 70px;
+  height: 55px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #2a1e14, #14100c);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* ─── OVERLAY (Start / Death / Win screens) ─── */
 .overlay {
   position: absolute;
   inset: 0;
   display: none;
   place-items: center;
   z-index: 10;
-  background: rgba(2, 3, 8, 0.58);
-  backdrop-filter: blur(10px);
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at center, rgba(10, 5, 3, 0.6), rgba(2, 2, 4, 0.85));
+  backdrop-filter: blur(8px) saturate(80%);
+  -webkit-backdrop-filter: blur(8px) saturate(80%);
 }
 
 .overlay.visible {
@@ -413,24 +480,42 @@ h1 {
 }
 
 .overlay-card {
-  width: min(440px, calc(100% - 48px));
-  padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 24px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.17), rgba(255, 255, 255, 0.07));
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+  width: min(420px, calc(100% - 40px));
+  padding: 32px 28px;
+  border: 1px solid rgba(255, 100, 40, 0.2);
+  border-radius: 18px;
+  background:
+    linear-gradient(160deg, rgba(255, 80, 30, 0.06), transparent 50%),
+    rgba(10, 10, 14, 0.85);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 30px rgba(255, 60, 20, 0.08);
+  text-align: center;
+}
+
+.overlay-card .eyebrow {
+  margin-bottom: 8px;
 }
 
 .overlay-card h2 {
-  font-size: 42px;
+  font-size: 38px;
+  line-height: 1.0;
+  background: linear-gradient(135deg, #fff, #ffaa66);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
 }
 
 .overlay-card p:not(.eyebrow) {
-  margin: 12px 0 22px;
+  margin: 14px 0 24px;
   color: var(--muted);
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
+/* ─── RESPONSIVE ─── */
 @media (max-width: 980px) {
   body {
     overflow: auto;
@@ -447,6 +532,6 @@ h1 {
 
   .game-viewport {
     order: -1;
-    min-height: 62vh;
+    min-height: 60vh;
   }
 }
