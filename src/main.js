@@ -13,18 +13,21 @@ class GarageHellGame {
     this.ui = new UI();
     this.audio = new AudioBus();
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x07070a);
-    this.scene.fog = new THREE.FogExp2(0x120706, 0.035);
+    this.scene.background = new THREE.Color(0x121016);
+    this.scene.fog = new THREE.FogExp2(0x21100b, 0.018);
     this.camera = new THREE.PerspectiveCamera(74, 1, 0.05, 80);
     this.renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     this.renderer.shadowMap.enabled = true;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.28;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.viewport.prepend(this.renderer.domElement);
 
     this.level = new Level(this.scene, this.viewport);
     this.player = new Player(this.camera, this.level, this.ui, this.audio);
     this.weapon = new ImpactShotgun(this.camera, this.ui, this.audio);
+    this.addPlayerHeadlamp();
     this.scene.add(this.camera);
     this.enemies = new EnemyManager(this.scene, this.level, this.audio);
     this.enemies.spawnAll(this.level.enemySpawns);
@@ -37,6 +40,14 @@ class GarageHellGame {
     this.resize();
     this.ui.update(this.state);
     requestAnimationFrame(() => this.loop());
+  }
+
+  addPlayerHeadlamp() {
+    const lamp = new THREE.SpotLight(0xffd3a0, 3.6, 18, Math.PI / 7, 0.42, 1.15);
+    lamp.position.set(0, 0.12, 0);
+    lamp.target.position.set(0, -0.18, -1);
+    this.camera.add(lamp);
+    this.camera.add(lamp.target);
   }
 
   bindEvents() {

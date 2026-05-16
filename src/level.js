@@ -58,28 +58,30 @@ export class Level {
   }
 
   addLighting() {
-    const ambient = new THREE.HemisphereLight(0x667080, 0x210a04, 0.62);
+    const ambient = new THREE.HemisphereLight(0xaeb8c8, 0x3b1d11, 1.28);
     this.scene.add(ambient);
     this.decor.push(ambient);
-    const red = new THREE.PointLight(0xff4b22, 4.8, 18);
-    red.position.set(1, 4, -4);
-    const orange = new THREE.PointLight(0xffa640, 2.3, 16);
+    const red = new THREE.PointLight(0xff5b2e, 7.2, 23);
+    red.position.set(1, 4.8, -4);
+    const orange = new THREE.PointLight(0xffbd69, 4.6, 22);
     orange.position.set(-6, 4, 5.5);
-    const blue = new THREE.PointLight(0x6fc6ff, 1.5, 10);
-    blue.position.set(-11, 3, 4);
-    this.scene.add(red, orange, blue);
-    this.decor.push(red, orange, blue);
+    const blue = new THREE.PointLight(0x8bd8ff, 2.8, 14);
+    blue.position.set(-11, 3.3, 4);
+    const workLight = new THREE.DirectionalLight(0xffe0bb, 1.15);
+    workLight.position.set(-4, 8, 7);
+    this.scene.add(red, orange, blue, workLight);
+    this.decor.push(red, orange, blue, workLight);
   }
 
   addRoomFloor(x, z, width, depth, color) {
-    const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.46, metalness: 0.08 });
+    const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.38, metalness: 0.1, emissive: 0x080604, emissiveIntensity: 0.2 });
     const floor = new THREE.Mesh(new THREE.BoxGeometry(width, 0.18, depth), mat);
     floor.position.set(x, -0.1, z);
     floor.receiveShadow = true;
     this.scene.add(floor);
     this.decor.push(floor);
 
-    const grid = new THREE.GridHelper(Math.max(width, depth), Math.ceil(Math.max(width, depth)), 0x502019, 0x323232);
+    const grid = new THREE.GridHelper(Math.max(width, depth), Math.ceil(Math.max(width, depth)), 0xff7a2d, 0x5b5f68);
     grid.position.set(x, 0.01, z);
     grid.scale.x = width / Math.max(width, depth);
     grid.scale.z = depth / Math.max(width, depth);
@@ -88,7 +90,7 @@ export class Level {
   }
 
   addBox(x, y, z, width, height, depth, color, collider = true, emissive = 0x000000) {
-    const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.62, metalness: 0.08, emissive, emissiveIntensity: emissive ? 0.35 : 0 });
+    const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.58, metalness: 0.08, emissive, emissiveIntensity: emissive ? 0.68 : 0.08 });
     const box = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat);
     box.position.set(x, y, z);
     box.castShadow = true;
@@ -149,6 +151,10 @@ export class Level {
       const light = this.addBox(x, 2.85, -1.3, 1.2, 0.08, 0.12, 0xffd28a, false, 0xff9a34);
       light.rotation.x = 0.04;
     }
+    this.addBox(0, 0.022, 5.25, 13.2, 0.025, 0.08, 0xff8c25, false, 0xff5a12);
+    this.addBox(0, 0.022, -5.35, 13.2, 0.025, 0.08, 0xff8c25, false, 0xff5a12);
+    this.addBox(-7.1, 0.022, 0, 0.08, 0.025, 10.8, 0xff8c25, false, 0xff5a12);
+    this.addBox(7.1, 0.022, 0, 0.08, 0.025, 10.8, 0xff8c25, false, 0xff5a12);
 
     const sign = makeTextSprite("HELL BENT AUTO REPAIR", { scaleX: 4.8, scaleY: 1.05, fontSize: 38 });
     sign.position.set(0, 2.5, 7.9);

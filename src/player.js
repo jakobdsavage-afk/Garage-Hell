@@ -32,6 +32,7 @@ export class Player {
     this.lookSensitivity = 0.0022;
     this.footBob = 0;
     this.damageCooldown = 0;
+    this.dragLook = false;
     this.bindControls();
     this.syncCamera();
   }
@@ -42,8 +43,20 @@ export class Player {
       this.setKey(event.code, true);
     });
     window.addEventListener("keyup", (event) => this.setKey(event.code, false));
+    this.level.viewport.addEventListener("mousedown", (event) => {
+      if (event.button === 0 && document.pointerLockElement !== this.level.viewport && !this.dead) {
+        this.dragLook = true;
+      }
+    });
+    window.addEventListener("mouseup", () => {
+      this.dragLook = false;
+    });
+    this.level.viewport.addEventListener("mouseleave", () => {
+      this.dragLook = false;
+    });
     window.addEventListener("mousemove", (event) => {
-      if (document.pointerLockElement !== this.level.viewport || this.dead) return;
+      const canLook = document.pointerLockElement === this.level.viewport || this.dragLook;
+      if (!canLook || this.dead) return;
       this.yaw -= event.movementX * this.lookSensitivity;
       this.pitch -= event.movementY * this.lookSensitivity;
       this.pitch = clamp(this.pitch, -1.25, 1.25);
