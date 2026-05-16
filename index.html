@@ -6,55 +6,89 @@
     <title>Garage Hell</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <div id="app">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">After-hours prototype</p>
-          <h1>Garage Hell</h1>
+      <!-- macOS-style title bar -->
+      <header class="titlebar">
+        <div class="traffic-lights">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
         </div>
-        <div class="hint">Click to shoot • Drag inside viewport to look</div>
+        <span class="titlebar-text">Garage Hell</span>
+        <div class="titlebar-spacer"></div>
       </header>
 
       <main class="shell">
+        <!-- LEFT HUD PANELS -->
         <aside class="side-panel left-stack">
-          <section class="glass-panel meter-panel">
+          <!-- Health -->
+          <section class="glass-panel">
             <div class="panel-heading">
-              <span>Health</span>
-              <strong><span id="healthValue">100</span>/<span id="maxHealthValue">100</span></strong>
+              <span class="panel-icon">&#x2764;&#xFE0F;</span>
+              <span class="panel-label">HEALTH</span>
+            </div>
+            <div class="big-stat">
+              <span class="big-num" id="healthValue">100</span>
+              <span class="big-denom">/ <span id="maxHealthValue">100</span></span>
             </div>
             <div class="meter"><div id="healthBar" class="meter-fill health-fill"></div></div>
           </section>
 
-          <section class="glass-panel meter-panel">
+          <!-- Armor -->
+          <section class="glass-panel">
             <div class="panel-heading">
-              <span>Armor</span>
-              <strong><span id="armorValue">25</span>/<span id="maxArmorValue">100</span></strong>
+              <span class="panel-icon">&#x1F6E1;&#xFE0F;</span>
+              <span class="panel-label">ARMOR</span>
+            </div>
+            <div class="big-stat">
+              <span class="big-num" id="armorValue">25</span>
+              <span class="big-denom">/ <span id="maxArmorValue">100</span></span>
             </div>
             <div class="meter"><div id="armorBar" class="meter-fill armor-fill"></div></div>
           </section>
 
-          <section class="glass-panel ammo-panel">
+          <!-- Ammo -->
+          <section class="glass-panel">
             <div class="panel-heading">
-              <span>Impact Shotgun</span>
-              <strong id="ammoValue">8 / 24</strong>
+              <span class="panel-icon ammo-icon">&#x1F4A5;</span>
+              <span class="panel-label">AMMO</span>
             </div>
-            <p>Shells</p>
+            <div class="big-stat">
+              <span class="big-num" id="ammoLoaded">8</span>
+              <span class="big-denom">/ <span id="ammoReserve">24</span></span>
+            </div>
+            <div class="ammo-sublabel">SHELLS</div>
+            <div class="meter"><div id="ammoBar" class="meter-fill ammo-fill"></div></div>
           </section>
 
-          <section class="glass-panel keys-panel">
-            <div class="panel-heading"><span>Keys</span></div>
+          <!-- Keys -->
+          <section class="glass-panel">
+            <div class="panel-heading">
+              <span class="panel-icon">&#x1F511;</span>
+              <span class="panel-label">KEYS</span>
+            </div>
             <div class="key-row">
-              <div id="redKey" class="key-chip red">RED</div>
-              <div id="blueKey" class="key-chip blue">BLUE</div>
-              <div id="yellowKey" class="key-chip yellow">YELLOW</div>
+              <div class="key-slot">
+                <div id="redKey" class="key-icon red">&#x1F511;</div>
+                <span class="key-count" id="redKeyCount">0</span>
+              </div>
+              <div class="key-slot">
+                <div id="blueKey" class="key-icon blue">&#x1F511;</div>
+                <span class="key-count" id="blueKeyCount">0</span>
+              </div>
+              <div class="key-slot">
+                <div id="yellowKey" class="key-icon yellow">&#x1F511;</div>
+                <span class="key-count" id="yellowKeyCount">0</span>
+              </div>
             </div>
           </section>
         </aside>
 
+        <!-- GAME VIEWPORT -->
         <section id="gameViewport" class="game-viewport" aria-label="Garage Hell gameplay viewport">
           <div class="viewport-frame"></div>
           <div id="crosshair" class="crosshair"></div>
@@ -67,7 +101,7 @@
           </div>
           <div id="overlay" class="overlay visible">
             <div class="overlay-card">
-              <p class="eyebrow">Cursed auto repair survival</p>
+              <p class="overlay-eyebrow">Cursed auto repair survival</p>
               <h2 id="overlayTitle">Garage Hell</h2>
               <p id="overlayText">Clear every Oil Imp, grab the keys, and survive the closing shift.</p>
               <button id="startButton" type="button">Start Game</button>
@@ -75,32 +109,51 @@
           </div>
         </section>
 
+        <!-- RIGHT HUD PANELS -->
         <aside class="side-panel right-stack">
-          <section class="glass-panel items-panel">
-            <div class="panel-heading"><span>Items</span></div>
-            <div class="item-grid">
-              <div class="item-slot"><b id="healthPickupCount">0</b><span>Medkits</span></div>
-              <div class="item-slot"><b id="armorPickupCount">0</b><span>Armor</span></div>
-              <div class="item-slot"><b id="ammoPickupCount">0</b><span>Shells</span></div>
-              <div class="item-slot"><b id="skullCount">0</b><span>Skulls</span></div>
+          <!-- Items -->
+          <section class="glass-panel">
+            <div class="panel-heading">
+              <span class="panel-icon">&#x1F392;</span>
+              <span class="panel-label">ITEMS</span>
+            </div>
+            <div class="items-list">
+              <div class="item-row">
+                <span class="item-icon health-item">&#x2795;</span>
+                <span class="item-count" id="healthPickupCount">0</span>
+              </div>
+              <div class="item-row">
+                <span class="item-icon armor-item">&#x1F6E1;&#xFE0F;</span>
+                <span class="item-count" id="armorPickupCount">0</span>
+              </div>
+              <div class="item-row">
+                <span class="item-icon skull-item">&#x1F480;</span>
+                <span class="item-count" id="skullCount">0</span>
+              </div>
             </div>
           </section>
 
-          <section class="glass-panel objective-panel">
-            <div class="panel-heading"><span>Objective</span></div>
-            <p id="objectiveText">Clear all Oil Imps</p>
-            <div class="enemy-count"><span id="enemiesKilled">0</span> / <span id="enemyTotal">10</span></div>
+          <!-- Objective -->
+          <section class="glass-panel">
+            <div class="panel-heading">
+              <span class="panel-icon">&#x2699;&#xFE0F;</span>
+              <span class="panel-label">OBJECTIVE</span>
+            </div>
+            <p class="objective-text" id="objectiveText">Clear all Oil Imps</p>
+            <div class="objective-progress">
+              <span class="objective-count" id="enemyProgress">0 / 10</span>
+            </div>
+            <div class="meter"><div id="objectiveBar" class="meter-fill objective-fill"></div></div>
           </section>
 
-          <section class="glass-panel status-panel">
-            <div class="panel-heading"><span>Status</span></div>
-            <strong id="statusText">READY</strong>
-            <p id="messageText">The service bays are quiet. Too quiet.</p>
-          </section>
-
-          <section class="glass-panel controls-panel">
-            <div class="panel-heading"><span>Controls</span></div>
-            <p>WASD move • Drag look • Click fire • Shift sprint • Space jump • R reload • E open</p>
+          <!-- Status -->
+          <section class="glass-panel">
+            <div class="panel-heading">
+              <span class="panel-icon">&#x1F4C8;</span>
+              <span class="panel-label">STATUS</span>
+            </div>
+            <strong class="status-value" id="statusText">READY</strong>
+            <p class="status-message" id="messageText">The service bays are quiet. Too quiet.</p>
           </section>
         </aside>
       </main>

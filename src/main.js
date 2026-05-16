@@ -105,10 +105,7 @@ class GarageHellGame {
   }
 
   updateControlHints() {
-    const hint = document.querySelector(".hint");
-    if (hint) hint.textContent = "Click to shoot \u2022 Drag inside viewport to look";
-    const controls = document.querySelector(".controls-panel p");
-    if (controls) controls.textContent = "WASD move \u2022 Drag look \u2022 Click fire \u2022 Shift sprint \u2022 Space jump \u2022 R reload \u2022 E open";
+    // Controls info is now part of the overlay card; no separate panel needed
   }
 
   get state() {
