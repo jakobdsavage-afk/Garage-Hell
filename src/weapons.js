@@ -75,7 +75,7 @@ export class ImpactShotgun {
     this.reserve += amount;
   }
 
-  tryFire(enemies) {
+  tryFire(enemies, blockers = []) {
     if (this.cooldown > 0 || this.reloadTimer > 0) return false;
     if (this.loaded <= 0) {
       this.ui.showMessage("No shells loaded. Press R.", "EMPTY");
@@ -98,7 +98,7 @@ export class ImpactShotgun {
       direction.normalize();
       this.raycaster.set(this.camera.position, direction);
       this.raycaster.far = this.range;
-      const hit = this.raycaster.intersectObjects(enemies.getMeshes(), true)[0];
+      const hit = this.raycaster.intersectObjects([...enemies.getMeshes(), ...blockers], true)[0];
       if (hit) {
         const root = enemies.findByMesh(hit.object);
         if (root && (!bestHit || hit.distance < bestHit.distance)) bestHit = { enemy: root, distance: hit.distance };

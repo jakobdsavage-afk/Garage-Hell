@@ -32,18 +32,18 @@ Then open the local URL printed by Vite, usually:
 http://127.0.0.1:5173
 ```
 
-Click the gameplay viewport to capture the mouse.
+Click inside the gameplay viewport to shoot. Drag inside the viewport to look around.
 
 ## Controls
 
 - WASD: move
-- Mouse: look
-- Left click: shoot the Impact Shotgun
+- Drag mouse in viewport: look
+- Click: shoot the Impact Shotgun
 - Shift: sprint
 - Space: jump
 - R: reload
 - E: interact/open door
-- Esc: release mouse
+- Esc: release browser focus if needed
 - Enter: restart from death/win screen
 
 ## Objective

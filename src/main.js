@@ -36,7 +36,14 @@ class GarageHellGame {
     this.running = false;
     this.won = false;
     this.inCombat = false;
+    this.fallbackPointer = {
+      active: false,
+      moved: false,
+      x: 0,
+      y: 0
+    };
     this.bindEvents();
+    this.updateControlHints();
     this.resize();
     this.ui.update(this.state);
     requestAnimationFrame(() => this.loop());
@@ -55,13 +62,30 @@ class GarageHellGame {
     this.ui.bindStart(() => this.startOrRestart());
     this.viewport.addEventListener("click", () => {
       this.audio.unlock();
-      if (!this.running || this.player.dead || this.won) return;
-      this.captureMouse();
     });
     window.addEventListener("mousedown", (event) => {
-      const aimingAtViewport = document.pointerLockElement === this.viewport || this.viewport.contains(event.target);
+      const aimingAtViewport = this.viewport.contains(event.target);
       if (event.button !== 0 || !aimingAtViewport) return;
-      if (this.running && !this.player.dead && !this.won) this.weapon.tryFire(this.enemies);
+      if (!this.running || this.player.dead || this.won) return;
+      this.audio.unlock();
+      this.fallbackPointer = {
+        active: true,
+        moved: false,
+        x: event.clientX,
+        y: event.clientY
+      };
+    });
+    window.addEventListener("mousemove", (event) => {
+      if (!this.fallbackPointer.active) return;
+      const dx = event.clientX - this.fallbackPointer.x;
+      const dy = event.clientY - this.fallbackPointer.y;
+      if (dx * dx + dy * dy > 36) this.fallbackPointer.moved = true;
+    });
+    window.addEventListener("mouseup", (event) => {
+      if (event.button !== 0 || !this.fallbackPointer.active) return;
+      const shouldShoot = !this.fallbackPointer.moved && this.viewport.contains(event.target);
+      this.fallbackPointer.active = false;
+      if (shouldShoot && this.running && !this.player.dead && !this.won) this.fireWeapon();
     });
     window.addEventListener("keydown", (event) => {
       if (event.code === "KeyE" && this.running && !this.player.dead && !this.won) {
@@ -71,6 +95,13 @@ class GarageHellGame {
         this.startOrRestart();
       }
     });
+  }
+
+  updateControlHints() {
+    const hint = document.querySelector(".hint");
+    if (hint) hint.textContent = "Click to shoot • Drag inside viewport to look";
+    const controls = document.querySelector(".controls-panel p");
+    if (controls) controls.textContent = "WASD move • Drag look • Click fire • Shift sprint • Space jump • R reload • E open";
   }
 
   get state() {
@@ -97,17 +128,14 @@ class GarageHellGame {
     this.pickups.reset(this.level.pickups);
     this.running = true;
     this.won = false;
+    this.fallbackPointer.active = false;
+    this.fallbackPointer.moved = false;
     this.ui.hideOverlay();
     this.ui.showMessage("Clear all Oil Imps.", "FIGHTING");
   }
 
-  captureMouse() {
-    try {
-      const lock = this.viewport.requestPointerLock?.();
-      if (lock?.catch) lock.catch(() => {});
-    } catch {
-      // Pointer lock can be blocked in embedded preview browsers; direct local play still works.
-    }
+  fireWeapon() {
+    this.weapon.tryFire(this.enemies, this.level.getActiveColliderMeshes());
   }
 
   resize() {
@@ -144,7 +172,6 @@ class GarageHellGame {
       this.running = false;
       this.ui.update(this.state);
       this.ui.showOverlay("Garage Cleared", "Every Oil Imp is down. Hell Bent Auto Repair survives another night.", "Restart");
-      document.exitPointerLock?.();
       return;
     }
 

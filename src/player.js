@@ -32,6 +32,7 @@ export class Player {
     this.lookSensitivity = 0.0022;
     this.footBob = 0;
     this.damageCooldown = 0;
+    this.spawnProtection = 3;
     this.dragLook = false;
     this.bindControls();
     this.syncCamera();
@@ -43,8 +44,9 @@ export class Player {
       this.setKey(event.code, true);
     });
     window.addEventListener("keyup", (event) => this.setKey(event.code, false));
+    window.addEventListener("blur", () => this.clearControls());
     this.level.viewport.addEventListener("mousedown", (event) => {
-      if (event.button === 0 && document.pointerLockElement !== this.level.viewport && !this.dead) {
+      if (event.button === 0 && !this.dead) {
         this.dragLook = true;
       }
     });
@@ -55,8 +57,7 @@ export class Player {
       this.dragLook = false;
     });
     window.addEventListener("mousemove", (event) => {
-      const canLook = document.pointerLockElement === this.level.viewport || this.dragLook;
-      if (!canLook || this.dead) return;
+      if (!this.dragLook || this.dead) return;
       this.yaw -= event.movementX * this.lookSensitivity;
       this.pitch -= event.movementY * this.lookSensitivity;
       this.pitch = clamp(this.pitch, -1.25, 1.25);
@@ -73,7 +74,15 @@ export class Player {
     if (code === "Space") this.controls.jump = active;
   }
 
+  clearControls() {
+    for (const key of Object.keys(this.controls)) {
+      this.controls[key] = false;
+    }
+    this.dragLook = false;
+  }
+
   reset() {
+    this.clearControls();
     this.position.set(0, 1.65, 6.25);
     this.velocity.set(0, 0, 0);
     this.pitch = 0;
@@ -84,12 +93,14 @@ export class Player {
     this.keys = { red: false, blue: false, yellow: false };
     this.pickupCounts = { health: 0, armor: 0, ammo: 0 };
     this.damageCooldown = 0;
+    this.spawnProtection = 3;
     this.syncCamera();
   }
 
   update(dt) {
     if (this.dead) return;
     this.damageCooldown = Math.max(0, this.damageCooldown - dt);
+    this.spawnProtection = Math.max(0, this.spawnProtection - dt);
 
     const forward = new THREE.Vector3(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
     const right = new THREE.Vector3(Math.cos(this.yaw), 0, -Math.sin(this.yaw));
@@ -136,8 +147,8 @@ export class Player {
   }
 
   applyDamage(amount) {
-    if (this.dead || this.damageCooldown > 0) return;
-    this.damageCooldown = 0.28;
+    if (this.dead || this.damageCooldown > 0 || this.spawnProtection > 0) return;
+    this.damageCooldown = 0.55;
     const armorBlock = Math.min(this.armor, amount * 0.62);
     this.armor -= armorBlock;
     this.health -= amount - armorBlock;
@@ -147,7 +158,6 @@ export class Player {
       this.health = 0;
       this.dead = true;
       this.audio.death();
-      document.exitPointerLock?.();
     }
   }
 

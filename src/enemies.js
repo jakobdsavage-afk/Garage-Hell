@@ -10,7 +10,7 @@ export class OilImp {
     this.velocity = new THREE.Vector3();
     this.health = 70;
     this.maxHealth = 70;
-    this.speed = 1.72 + Math.random() * 0.38;
+    this.speed = 1.28 + Math.random() * 0.28;
     this.attackCooldown = Math.random() * 0.8;
     this.radius = 0.48;
     this.dead = false;
@@ -56,7 +56,7 @@ export class OilImp {
     this.attackCooldown = Math.max(0, this.attackCooldown - dt);
     const toPlayer = new THREE.Vector3(player.position.x - this.position.x, 0, player.position.z - this.position.z);
     const distance = toPlayer.length();
-    const awake = distance < 10.5;
+    const awake = distance < 8.2;
 
     if (awake && !player.dead) {
       toPlayer.normalize();
@@ -64,9 +64,14 @@ export class OilImp {
       this.velocity.x = THREE.MathUtils.lerp(this.velocity.x, desired.x, clamp01(6 * dt));
       this.velocity.z = THREE.MathUtils.lerp(this.velocity.z, desired.z, clamp01(6 * dt));
 
-      if (distance < 1.18 && this.attackCooldown <= 0) {
-        player.applyDamage(10);
-        this.attackCooldown = 1.05;
+      const canReachPlayer = distance < 1.18 && this.level.hasLineOfSight(
+        new THREE.Vector3(this.position.x, 0.9, this.position.z),
+        new THREE.Vector3(player.position.x, 0.9, player.position.z),
+        0.55
+      );
+      if (canReachPlayer && this.attackCooldown <= 0) {
+        player.applyDamage(7);
+        this.attackCooldown = 1.35;
       }
     } else {
       this.velocity.multiplyScalar(0.9);

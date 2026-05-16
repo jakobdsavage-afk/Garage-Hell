@@ -248,4 +248,20 @@ export class Level {
     door.collider.active = false;
     door.mesh.visible = false;
   }
+
+  getActiveColliderMeshes() {
+    return this.colliders
+      .filter((collider) => collider.active && collider.object?.visible !== false)
+      .map((collider) => collider.object);
+  }
+
+  hasLineOfSight(from, to, clearance = 0.2) {
+    const direction = new THREE.Vector3().subVectors(to, from);
+    const distance = direction.length();
+    if (distance <= 0.001) return true;
+    direction.normalize();
+
+    const raycaster = new THREE.Raycaster(from, direction, 0, Math.max(0, distance - clearance));
+    return raycaster.intersectObjects(this.getActiveColliderMeshes(), true).length === 0;
+  }
 }
